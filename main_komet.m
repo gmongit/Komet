@@ -23,6 +23,45 @@ opts = odeset('RelTol',1e-9,'AbsTol',1e-9);
 tE = linspace(0, tmax, 2000);
 rE = earthPos(tE);
 
+% Minimaler Abstand Erde–Komet
+
+% Erdpositionen zu den jeweiligen Zeitpunkten
+rE_simple = earthPos(tS');   % 2xN
+rE_full   = earthPos(tF');   % 2xN
+
+% Kometenpositionen
+rK_simple = yS(:,1:2)';      % 2xN
+rK_full   = yF(:,1:2)';
+
+% Abstände
+d_simple = vecnorm(rK_simple - rE_simple, 2, 1);
+d_full   = vecnorm(rK_full   - rE_full,   2, 1);
+
+% Minima
+[dmin_simple, idxS] = min(d_simple);
+[dmin_full,   idxF] = min(d_full);
+
+% Zeitpunkte
+tmin_simple = tS(idxS);
+tmin_full   = tF(idxF);
+
+% Differenz
+delta_d = abs(dmin_simple - dmin_full);
+
+% Ausgabe
+fprintf('Minimaler Abstand (simpleG): %.3e m (%.3f AE)\n', ...
+        dmin_simple, dmin_simple/AU);
+
+fprintf('Minimaler Abstand (fullG)  : %.3e m (%.3f AE)\n', ...
+        dmin_full, dmin_full/AU);
+
+fprintf('Differenz: %.3e m (%.3f AE)\n', ...
+        delta_d, delta_d/AU);
+
+
+
+
+
 % Plot
 figure;
 hold on; grid on; axis equal;
@@ -32,6 +71,9 @@ plot(yF(:,1)/AU, yF(:,2)/AU, 'r', 'LineWidth', 1.5);
 plot(rE(1,:)/AU, rE(2,:)/AU, 'k--', 'LineWidth', 1.2);
 
 plot(0,0,'yo','MarkerFaceColor','y'); % Sonne
+
+plot(rK_simple(1,idxS)/AU, rK_simple(2,idxS)/AU, 'bo', 'MarkerFaceColor','b');
+plot(rK_full(1,idxF)/AU,   rK_full(2,idxF)/AU,   'ro', 'MarkerFaceColor','r');
 
 xlabel('x [AE]');
 ylabel('y [AE]');
