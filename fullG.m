@@ -1,33 +1,29 @@
 function g = fullG(r, t)
-%FULLG Gravitationsfeld (Beschleunigung) von Sonne + Erde.
-%   g = fullG(r,t)
-%   r ... Position (2x1 oder 1x2) im Sonnensystem [m]
-%   t ... Zeitpunkt [s]
-%   g ... Beschleunigung am Punkt r durch Sonne + Erde [m/s^2]
-%
-%   Voraussetzung: Ihr habt eine Funktion earthPos(t),
-%   die die Erdposition relativ zur Sonne als 2x1 Vektor [m] liefert.
+%FULLG Beschleunigung durch Sonne + Erde (2D, SI)
+% r: 2x1 oder 1x2 [m], t: [s], g: 2x1 [m/s^2]
+% nutzt earthPos(t) [m]
 
-    % Konstanten (SI)
-    G       = 6.67430e-11;      % [m^3/(kg*s^2)]
-    M_earth = 5.9722e24;        % [kg]
+    % Konstanten
+    muS = 1.32712440018e20;   % GM Sonne [m^3/s^2]
+    muE = 3.986004418e14;     % GM Erde [m^3/s^2]
 
     r = r(:);
 
-    % 1) Beitrag Sonne (Sonne sitzt im Ursprung)
-    g = simpleG(r);
+    % Sonne (im Ursprung)
+    rn = norm(r);
+    gS = -muS * r / rn^3;
 
-    % 2) Beitrag Erde (Erde sitzt bei rE(t))
-    rE = earthPos(t);     % <-- muss von euch kommen, in [m]
+    % Erde
+    rE = earthPos(t);     % muss [m] liefern
     rE = rE(:);
 
-    dvec = r - rE;        % Vektor von Erde zum Punkt
+    dvec = r - rE;
     d    = norm(dvec);
 
-    if d == 0
-        error('fullG: Punkt liegt exakt auf der Erde (Abstand = 0).');
-    end
+    % (kleine Sicherheitsklammer, damit nix explodiert falls d extrem klein)
+    d = max(d, 1e7);      % 10.000 km
 
-    % Beschleunigung durch Erde addieren
-    g = g - G * M_earth / d^3 * dvec;
+    gE = -muE * dvec / d^3;
+
+    g = gS + gE;
 end
