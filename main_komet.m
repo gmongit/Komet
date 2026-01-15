@@ -20,17 +20,17 @@ opts = odeset('RelTol',1e-9,'AbsTol',1e-9);
 [tF, yF] = ode45(@kometODE_full, tspan, y0, opts);
 
 % Erdbahn
-tE = linspace(0, tmax, 2000);
+tE = linspace(0, tmax, 20000);
 rE = earthPos(tE);
 
 % Minimaler Abstand Erde–Komet
 
 % Erdpositionen zu den jeweiligen Zeitpunkten
-rE_simple = earthPos(tS');   % 2xN
-rE_full   = earthPos(tF');   % 2xN
+rE_simple = earthPos(tS');   
+rE_full   = earthPos(tF');  
 
 % Kometenpositionen
-rK_simple = yS(:,1:2)';      % 2xN
+rK_simple = yS(:,1:2)';      
 rK_full   = yF(:,1:2)';
 
 % Abstände
@@ -47,6 +47,10 @@ tmin_full   = tF(idxF);
 
 % Differenz
 delta_d = abs(dmin_simple - dmin_full);
+
+
+
+
 
 % Ausgabe
 fprintf('Minimaler Abstand (simpleG): %.3e m (%.3f AE)\n', ...
