@@ -26,11 +26,11 @@ rE = earthPos(tE);
 % Minimaler Abstand Erde–Komet
 
 % Erdpositionen zu den jeweiligen Zeitpunkten
-rE_simple = earthPos(tS');   % 2xN
-rE_full   = earthPos(tF');   % 2xN
+rE_simple = earthPos(tS');   
+rE_full   = earthPos(tF');  
 
 % Kometenpositionen
-rK_simple = yS(:,1:2)';      % 2xN
+rK_simple = yS(:,1:2)';      
 rK_full   = yF(:,1:2)';
 
 % Abstände
