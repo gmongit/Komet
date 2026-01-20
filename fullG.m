@@ -1,11 +1,11 @@
 function g = fullG(r, t)
 %FULLG Beschleunigung durch Sonne + Erde (2D, SI)
-% r: 2x1 oder 1x2 [m], t: [s], g: 2x1 [m/s^2]
-% nutzt earthPos(t) [m]
+
+
 
     % Konstanten
-    muS = 1.32712440018e20;   % GM Sonne [m^3/s^2]
-    muE = 3.986004418e14;     % GM Erde [m^3/s^2]
+    muS = 1.32712440018e20;   % GM Sonne [m^3/s^2] G*m
+    muE = 3.986004418e14;     % GM Erde [m^3/s^2]  G*m
 
     r = r(:);
 
@@ -14,7 +14,7 @@ function g = fullG(r, t)
     gS = -muS * r / rn^3;
 
     % Erde
-    rE = earthPos(t);     % muss [m] liefern
+    rE = earthPos(t);   
     rE = rE(:);
 
     dvec = r - rE;
